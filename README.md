@@ -21,5 +21,6 @@ docker cp gdb-multiarch:/gdb-multiarch.tgz .
 You can install it into your Arch system by doing 
 
 ```sh
-sudo tar -xzf gdb-multiarch.tgz -C /
+sudo pacman -S --noconfirm xz ncurses expat python guile gdb-common && \
+    sudo tar -xzf gdb-multiarch.tgz -C /
 ```
