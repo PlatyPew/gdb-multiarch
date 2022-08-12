@@ -14,7 +14,8 @@ WORKDIR /home/builder
 RUN MAKEFLAGS="-j$(nproc)" yay -S --noconfirm gdb-multiarch && \
     rm -rf /home/builder/.cache && \
     yay -Rdd --noconfirm gdb-common && \
-    tar -czvf gdb-multiarch.tgz $(find / -name "*gdb*" 2> /dev/null | grep -v gdbm | grep -v gdbus | grep -v pacman)
+    tar -czvf gdb-multiarch.tgz \
+        /usr/share/gdb/ /usr/share/glib-2.0/gdb/ /usr/bin/gdb-multiarch
 
 FROM scratch
 COPY --from=build /home/builder/gdb-multiarch.tgz .
