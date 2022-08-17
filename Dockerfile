@@ -10,12 +10,12 @@ RUN sed -i 's/#ParallelDownloads = 5/ParallelDownloads = 8/g' /etc/pacman.conf &
 
 USER builder
 WORKDIR /home/builder
+COPY PKGBUILD .
 
-RUN MAKEFLAGS="-j$(nproc)" yay -S --noconfirm gdb-multiarch && \
-    rm -rf /home/builder/.cache && \
-    yay -Rdd --noconfirm gdb-common && \
-    tar -czvf gdb-multiarch.tgz \
-        /usr/share/gdb/ /usr/share/glib-2.0/gdb/ /usr/bin/gdb-multiarch
+RUN sudo pacman -S --noconfirm python gdb-common=12.1 && \
+    MAKEFLAGS="-j $(nproc)" makepkg && \
+    mkdir package && \
+    mv gdb-multiarch-*.pkg.tar.xz package
 
 FROM scratch
-COPY --from=build /home/builder/gdb-multiarch.tgz .
+COPY --from=build /home/builder/package/ .
